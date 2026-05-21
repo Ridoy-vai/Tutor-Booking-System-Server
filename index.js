@@ -88,7 +88,7 @@ async function getCollections() {
     };
 }
 
-app.post('/tutors', verifyJWT, async (req, res) => {
+app.post('/tutors', async (req, res) => {
     const { tutorsCollection } = await getCollections();
     const tutors = req.body;
     const result = await tutorsCollection.insertOne(tutors);
@@ -138,7 +138,7 @@ app.get('/tutors/:id', async (req, res) => {
     res.send(result);
 });
 
-app.patch('/tutors/:id', verifyJWT, async (req, res) => {
+app.patch('/tutors/:id', async (req, res) => {
     const { tutorsCollection } = await getCollections();
     const { id } = req.params;
     const updatedData = req.body;
@@ -149,7 +149,7 @@ app.patch('/tutors/:id', verifyJWT, async (req, res) => {
     res.send(result);
 });
 
-app.get('/mytutors/:userId', verifyJWT, async (req, res) => {
+app.get('/mytutors/:userId', async (req, res) => {
     const { tutorsCollection } = await getCollections();
     const { userId } = req.params;
     const result = await tutorsCollection.find({ userId }).toArray();
@@ -181,7 +181,7 @@ app.delete('/tutors/:userId/:_id', async (req, res) => {
     res.send(result);
 });
 
-app.post('/bookings', verifyJWT, async (req, res) => {
+app.post('/bookings', async (req, res) => {
     const { bookingsCollection } = await getCollections();
     const bookings = req.body;
     const result = await bookingsCollection.insertOne(bookings);

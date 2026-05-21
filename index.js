@@ -156,7 +156,7 @@ app.get('/mytutors/:userId', async (req, res) => {
     res.send(result);
 });
 
-app.get('/tutors/:userId/:_id', verifyJWT, async (req, res) => {
+app.get('/tutors/:userId/:_id', async (req, res) => {
     const { tutorsCollection } = await getCollections();
     const { userId, _id } = req.params;
     const result = await tutorsCollection.find({ userId, _id: new ObjectId(_id) }).toArray();
@@ -194,7 +194,7 @@ app.get('/bookings', async (req, res) => {
     res.send(result);
 });
 
-app.get('/bookings/:userId', verifyJWT, async (req, res) => {
+app.get('/bookings/:userId', async (req, res) => {
     const { bookingsCollection } = await getCollections();
     const { userId } = req.params;
     const result = await bookingsCollection.find({ userId }).toArray();

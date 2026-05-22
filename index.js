@@ -192,12 +192,16 @@ app.get('/bookings/:userId',verifyJWT, verifyJWT, async (req, res) => {
     res.send(result);
 });
 
-
-
-app.get('/bookings/:userId/:id',jwtVerify, async (req, res) => {
+app.get('/bookings', async (req, res) => {
     const { bookingsCollection } = await getCollections();
-    const { userId, id } = req.params;
-    const result = await bookingsCollection.find({ userId, _id: new ObjectId(id) }).toArray();
+    const result = await bookingsCollection.find().toArray();
+    res.send(result);
+});
+
+app.get('/bookings/:userId/:_id', async (req, res) => {
+    const { bookingsCollection } = await getCollections();
+    const { userId, _id } = req.params;
+    const result = await bookingsCollection.find({ userId, _id: new ObjectId(_id) }).toArray();
     res.send(result);
 });
 

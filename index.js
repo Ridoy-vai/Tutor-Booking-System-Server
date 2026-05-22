@@ -11,14 +11,7 @@ const port = Number(process.env.PORT) || 2000;
 const clientUri = process.env.CLIENT_URI;
 const mongoUri = process.env.MONGODB_URI;
 
-const corsOptions = clientUri
-    ? {
-        origin: [clientUri],
-        credentials: true,
-    }
-    : {};
-
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(express.json());
 
 if (!mongoUri) {
@@ -138,7 +131,7 @@ app.get('/tutors/:id', async (req, res) => {
     res.send(result);
 });
 
-app.patch('/tutors/:id', async (req, res) => {
+app.patch('/tutors/:id', verifyJWT, async (req, res) => {
     const { tutorsCollection } = await getCollections();
     const { id } = req.params;
     const updatedData = req.body;
@@ -149,7 +142,7 @@ app.patch('/tutors/:id', async (req, res) => {
     res.send(result);
 });
 
-app.get('/mytutors/:userId', async (req, res) => {
+app.get('/mytutors/:userId', verifyJWT, async (req, res) => {
     const { tutorsCollection } = await getCollections();
     const { userId } = req.params;
     const result = await tutorsCollection.find({ userId }).toArray();
@@ -174,14 +167,14 @@ app.patch('/tutors/:userId/:_id', async (req, res) => {
     res.send(result);
 });
 
-app.delete('/tutors/:userId/:_id', async (req, res) => {
+app.delete('/tutors/:userId/:_id', verifyJWT, async (req, res) => {
     const { tutorsCollection } = await getCollections();
     const { userId, _id } = req.params;
     const result = await tutorsCollection.deleteOne({ userId, _id: new ObjectId(_id) });
     res.send(result);
 });
 
-app.post('/bookings', async (req, res) => {
+app.post('/bookings',verifyJWT, async (req, res) => {
     const { bookingsCollection } = await getCollections();
     const bookings = req.body;
     const result = await bookingsCollection.insertOne(bookings);
@@ -194,14 +187,14 @@ app.get('/bookings', async (req, res) => {
     res.send(result);
 });
 
-app.get('/bookings/:userId', async (req, res) => {
+app.get('/bookings/:userId', verifyJWT, async (req, res) => {
     const { bookingsCollection } = await getCollections();
     const { userId } = req.params;
     const result = await bookingsCollection.find({ userId }).toArray();
     res.send(result);
 });
 
-app.get('/bookings/:userId/:id', async (req, res) => {
+app.get('/bookings/:userId/:id',verifyJWT, async (req, res) => {
     const { bookingsCollection } = await getCollections();
     const { userId, id } = req.params;
     const result = await bookingsCollection.find({ userId, _id: new ObjectId(id) }).toArray();

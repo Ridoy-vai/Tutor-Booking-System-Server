@@ -88,6 +88,7 @@ app.post('/tutors', async (req, res) => {
     res.send(result);
 });
 
+
 app.get('/tutors', async (req, res) => {
     try {
         const { tutorsCollection } = await getCollections();
@@ -95,18 +96,20 @@ app.get('/tutors', async (req, res) => {
         const query = {};
 
         if (name) {
-            query.fullName = { $regex: name, $options: 'i' };
+            query.TecherName = { $regex: name, $options: 'i' };
         }
 
         if (startDate || endDate) {
-            query.startDate = {};
+            query.tutorstartDate = {};
 
             if (startDate) {
-                query.startDate.$gte = startDate;
+                // "2024-01-15" → "2024-01-15T00:00:00.000Z"
+                query.tutorstartDate.$gte = new Date(startDate + 'T00:00:00.000Z').toISOString();
             }
 
             if (endDate) {
-                query.startDate.$lte = endDate;
+                // "2024-01-20" → "2024-01-20T23:59:59.999Z"
+                query.tutorstartDate.$lte = new Date(endDate + 'T23:59:59.999Z').toISOString();
             }
         }
 
@@ -181,11 +184,6 @@ app.post('/bookings',verifyJWT, async (req, res) => {
     res.send(result);
 });
 
-// app.get('/bookings', async (req, res) => {
-//     const { bookingsCollection } = await getCollections();
-//     const result = await bookingsCollection.find().toArray();
-//     res.send(result);
-// });
 
 app.get('/bookings/:userId',verifyJWT, verifyJWT, async (req, res) => {
     const { bookingsCollection } = await getCollections();
@@ -194,7 +192,9 @@ app.get('/bookings/:userId',verifyJWT, verifyJWT, async (req, res) => {
     res.send(result);
 });
 
-app.get('/bookings/:userId/:id',verifyJWT, async (req, res) => {
+
+
+app.get('/bookings/:userId/:id',jwtVerify, async (req, res) => {
     const { bookingsCollection } = await getCollections();
     const { userId, id } = req.params;
     const result = await bookingsCollection.find({ userId, _id: new ObjectId(id) }).toArray();

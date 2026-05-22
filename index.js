@@ -181,11 +181,11 @@ app.post('/bookings',verifyJWT, async (req, res) => {
     res.send(result);
 });
 
-app.get('/bookings', async (req, res) => {
-    const { bookingsCollection } = await getCollections();
-    const result = await bookingsCollection.find().toArray();
-    res.send(result);
-});
+// app.get('/bookings', async (req, res) => {
+//     const { bookingsCollection } = await getCollections();
+//     const result = await bookingsCollection.find().toArray();
+//     res.send(result);
+// });
 
 app.get('/bookings/:userId',verifyJWT, verifyJWT, async (req, res) => {
     const { bookingsCollection } = await getCollections();

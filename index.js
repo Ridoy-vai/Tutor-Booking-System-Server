@@ -187,7 +187,7 @@ app.get('/bookings', async (req, res) => {
     res.send(result);
 });
 
-app.get('/bookings/:userId', verifyJWT, async (req, res) => {
+app.get('/bookings/:userId',verifyJWT, verifyJWT, async (req, res) => {
     const { bookingsCollection } = await getCollections();
     const { userId } = req.params;
     const result = await bookingsCollection.find({ userId }).toArray();
